@@ -28,13 +28,13 @@ return new Promise((resolve, reject) => {
 let beakers = {
     1: [1, 0, 0],
     2: [2, 1, 2],
-    3: [2, 2, 1]
+    3: [2, 1, 0],
 };
 
 let drop = [];
 
 // function to handle the pouring action
-function check(){
+function check(from, to){
     drop = [];
     let last = 0;
 
@@ -43,7 +43,7 @@ function check(){
         if(beakers[from][i] != 0){
             if(drop.length == 0){
                 drop.push(beakers[from][i]);
-                last = beakers[from][i]
+                last = beakers[from][i];
             } else if(beakers[from][i] == last){
                 drop.push(beakers[from][i]);
             } else if(beakers[from][i] != last){
@@ -61,11 +61,10 @@ function check(){
         }
     }
 
-    return false
+    return false;
 }
 
 function pour() {
-    console.log(drop)
     // go in reverse through the from breaker to remove the drop
     for(let i = beakers[from].length-1; i >= 0; i--){
         if(beakers[from][i] != 0){
@@ -99,23 +98,45 @@ function checkFinish() {
     return false;
 }
 
+// check if there are any legal moves left
+function checkLose() {
+    let length = Object.keys(beakers).length
+    for(let i = 1; i <= length; i ++){
+        for(let j = 1; j <= length; j++){
+            if(i == j){
+                continue;
+            }
+            let possible = check(i, j);
+            if(possible){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 
 // main function to call the other function in order
 async function main(){
+    console.table(beakers);
     while(resume){
-        await question1()
-        await question2()
-        if(check()){
+        if(checkLose()){
+            console.log("No moves left. You lost!");
+            break;
+        }
+
+        await question1();
+        await question2();
+        if(check(from, to)){
             pour();
-            console.table(beakers)
-            resume = checkFinish()
+            console.table(beakers);
+            resume = checkFinish();
         } else {
-            console.log(drop)
-            console.log("Move not legal!")
+            console.log("Move not legal!");
         }
     }
-    console.log("You won!")
-    rl.close()
+    console.log("You won!");
+    rl.close();
 }
 
 main();
