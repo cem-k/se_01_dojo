@@ -131,11 +131,13 @@ async function main(){
             pour();
             console.table(beakers);
             resume = checkFinish();
+            if(!resume){
+                console.log("You won!");
+            }
         } else {
             console.log("Move not legal!");
         }
     }
-    console.log("You won!");
     rl.close();
 }
 
