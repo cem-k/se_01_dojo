@@ -9,7 +9,7 @@ const question1 = () => {
 return new Promise((resolve, reject) => {
     rl.question('From: ', (answer) => {
     from = answer;
-    resolve()
+    resolve();
     })
 })
 }
@@ -19,7 +19,7 @@ return new Promise((resolve, reject) => {
     rl.question('To: ', (answer) => {
     to = answer;
     console.log(pour())
-    resolve()
+    resolve();
     })
 })
 }
@@ -47,11 +47,12 @@ function pour(){
             }
         }
     }
+    console.log(drop)
 
     // check if the pouring of the drop is possible
     for(let i = 0; i < beakers[to].length; i++){
         if(beakers[to][i] == 0){
-            if(beakers[to][i-1] == drop[0]){
+            if((beakers[to][i-1] == drop[0] && beakers[to].length - i >= drop.length) || i == 0){
                 return true;
             } 
         }
